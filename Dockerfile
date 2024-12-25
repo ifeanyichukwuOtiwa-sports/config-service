@@ -19,7 +19,10 @@ RUN java -Djarmode=tools -jar config-service.jar extract --layers --destination 
 
 FROM eclipse-temurin:21
 
-RUN useradd spring #security
+LABEL AUTHOR="WINSON"
+
+RUN useradd spring; mkdir -p /home/spring/.config/jgit \
+    && chown -R spring /home/spring
 
 USER spring
 
