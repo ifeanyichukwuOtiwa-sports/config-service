@@ -11,7 +11,7 @@ WORKDIR /workspace
 
 ARG JAR_FILE=build/libs/*.jar
 
-COPY ${JAR_FILE} catalog-service.jar
+COPY ${JAR_FILE} config-service.jar
 
 RUN java -Djarmode=tools -jar config-service.jar extract --layers --destination extracted
 
