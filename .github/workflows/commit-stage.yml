@@ -27,6 +27,11 @@ jobs:
           java-version: '21'
           cache: gradle
 
+      - name: Build, Unit Test And Integration Test
+        run: |
+          chmod +x gradlew
+          ./gradlew clean build --info --stacktrace
+
       - name: Code Vulnerability Scanner
         uses: anchore/scan-action@v6
         id: scan
@@ -43,10 +48,15 @@ jobs:
         with:
           sarif_file: ${{ steps.scan.outputs.sarif }}
 
-      - name: Build, Unit Test And Integration Test
+      - name: Setup tools
+        uses: alexellis/setup-arkade@v3
+      - name: Install tools
+        uses: alexellis/arkade-get@master
+        with:
+          kubeconform: latest
+      - name: Validate Kubernetes manifests
         run: |
-          chmod +x gradlew
-          ./gradlew clean build --info --stacktrace
+          kubeconform --strict k8s/
 
   package:
     name: Package and Publish
